@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartik Mandloi | Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* --- NETFLIX ENTRY (Responsive) --- */
+        #intro-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; display: flex; justify-content: center; align-items: center; z-index: 100;
+        }
+        .netflix-text {
+            font-size: 12vw; /* Mobile par screen ke hisab se size badlega */
+            font-weight: 900; color: #E50914; letter-spacing: 10px;
+            text-transform: uppercase; animation: netflix-zoom 3s ease-in-out forwards;
+            font-family: 'Arial Black', sans-serif;
+        }
+        @keyframes netflix-zoom {
+            0% { transform: scale(0.5); opacity: 0; filter: blur(15px); }
+            50% { opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        /* --- MAIN CONTENT & BACKGROUND --- */
+        #main-content {
+            opacity: 0; width: 100%; height: 100vh; display: flex;
+            justify-content: center; align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('background.jpg');
+            background-size: cover; background-position: center;
+            transition: opacity 1.5s ease-in;
+        }
+
+        /* THE RESPONSIVE CARD */
+        .profile-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 40px 25px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            width: 90%; /* Mobile par screen ki 90% width lega */
+            max-width: 360px; /* Desktop par 360px se bada nahi hoga */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease; /* Mobile touch smooth banane ke liye */
+        }
+
+        /* Mobile par touch karte hi card thoda bada dikhega */
+        .profile-card:active {
+            transform: scale(0.98);
+        }
+
+        .profile-img {
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            border: 4px solid #00d2ff;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        h1 { font-size: 26px; margin-bottom: 10px; }
+
+        .typing-container {
+            color: #00d2ff; font-weight: bold; letter-spacing: 2px;
+            font-size: 13px; margin-bottom: 30px; height: 20px;
+        }
+
+        .btn {
+            background: #00d2ff; color: white; padding: 15px 25px;
+            border: none; border-radius: 50px; font-weight: bold;
+            cursor: pointer; width: 100%; transition: 0.3s;
+            -webkit-tap-highlight-color: transparent; /* Mobile tap blue box hatane ke liye */
+        }
+
+        #top-time {
+            position: absolute; top: 15px; right: 20px;
+            font-family: monospace; color: #00d2ff; font-size: 14px;
+        }
+
+        /* Chote mobile ke liye font size aur kam */
+        @media (max-width: 400px) {
+            h1 { font-size: 22px; }
+            .netflix-text { font-size: 15vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen">
+        <div class="netflix-text">KARTIK</div>
+    </div>
+
+    <div id="main-content">
+        <div id="top-time">00:00:00</div>
+        
+        <div class="profile-card" data-tilt data-tilt-max="15" data-tilt-gyroscope="true">
+            <img src="kartik.jpg" alt="Kartik" class="profile-img" onerror="this.src='https://api.dicebear.com/7.x/initials/svg?seed=KM'">
+            <h1>Kartik Mandloi</h1>
+            
+            <div class="typing-container">
+                <span id="typing-text"></span><span style="animation: blink 0.7s infinite;">|</span>
+            </div>
+
+            <button class="btn" onclick="celebrate()">Contact Me</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        setInterval(() => { document.getElementById('top-time').innerText = new Date().toLocaleTimeString(); }, 1000);
+
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.display = 'none';
+                document.getElementById('main-content').style.opacity = '1';
+                type();
+            }, 3000);
+        };
+
+        const words = ["JS DEVELOPER PRO", "MOBILE READY", "TECH ENTHUSIAST"];
+        let i = 0, j = 0, isDeleting = false;
+        function type() {
+            const current = words[i];
+            const text = isDeleting ? current.substring(0, j-1) : current.substring(0, j+1);
+            document.getElementById("typing-text").textContent = text;
+            j = isDeleting ? j - 1 : j + 1;
+
+            if (!isDeleting && j === current.length) { isDeleting = true; setTimeout(type, 2000); }
+            else if (isDeleting && j === 0) { isDeleting = false; i = (i + 1) % words.length; setTimeout(type, 500); }
+            else { setTimeout(type, isDeleting ? 50 : 150); }
+        }
+
+        function celebrate() { 
+            confetti({ 
+                particleCount: 100, 
+                spread: 60, 
+                origin: { y: 0.8 } /* Mobile par thoda neeche se confetti udyega */
+            }); 
+        }
+
+        // VanillaTilt with Gyroscope for Mobile
+        VanillaTilt.init(document.querySelector(".profile-card"), {
+            max: 15,
+            speed: 400,
+            gyroscope: true // Isse phone hilane par card jhukega!
+        });
+    </script>
+    <style> @keyframes blink { 50% { opacity: 0; } } </style>
+</body>
+</html>
